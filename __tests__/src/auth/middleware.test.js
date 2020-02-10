@@ -1,10 +1,10 @@
 'use strict';
 
+process.env.SECRET="test";
+
 const supergoose = require('../../supergoose.js');
 const auth = require('../../../src/auth/middleware.js');
 const Users = require('../../../src/auth/users-model.js');
-
-process.env.SECRET = 'changeit';
 
 let users = {
   admin: {username: 'admin', password: 'password', role: 'admin'},
@@ -23,14 +23,14 @@ beforeAll(async (done) => {
 afterAll(supergoose.stopDB);
 
 describe('Auth Middleware', () => {
-
+  
   // admin:password: YWRtaW46cGFzc3dvcmQ=
   // admin:foo: YWRtaW46Zm9v
-
-  let errorObject = {"message": "Invalid User ID/Password", "status": 401, "statusMessage": "Unauthorized"};
-
+  
+  let errorObject = "Invalid User ID/Password";
+  
   describe('user authentication', () => {
-
+    
     let cachedToken;
 
     it('fails a login for a user (admin) with the incorrect basic credentials', () => {
@@ -45,11 +45,11 @@ describe('Auth Middleware', () => {
       let middleware = auth;
 
       return middleware(req, res, next)
-          .then(() => {
-            expect(next).toHaveBeenCalledWith(errorObject);
-          });
+        .then(() => {
+          expect(next).toHaveBeenCalledWith(errorObject);
+        });
 
-    });
+    }); // it()
 
     it('logs in an admin user with the right credentials', () => {
 
@@ -63,13 +63,13 @@ describe('Auth Middleware', () => {
       let middleware = auth;
 
       return middleware(req,res,next)
-          .then( () => {
-            cachedToken = req.token;
-            expect(next).toHaveBeenCalledWith();
-          });
+        .then( () => {
+          cachedToken = req.token;
+          expect(next).toHaveBeenCalledWith();
+        });
 
-    });
-
+    }); // it()
+    
   });
 
 });

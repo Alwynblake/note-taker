@@ -11,3 +11,7 @@ If someone were to download your repo (above), what steps do they need to take t
 * Provide your username and password to get a token, create a user in the database
 * Endpoint: /signin
 * Provide your username and password to get a token
+
+#### In order to run:
+* start server: `nodemon`
+* start mongo db: `mongod --dbpath ./db`

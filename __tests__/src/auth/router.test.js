@@ -1,5 +1,6 @@
 'use strict';
-process.env.STORAGE = 'mongo';
+
+process.env.SECRET='test';
 
 const jwt = require('jsonwebtoken');
 
@@ -18,38 +19,36 @@ beforeAll(supergoose.startDB);
 afterAll(supergoose.stopDB);
 
 describe('Auth Router', () => {
-
+  
   Object.keys(users).forEach( userType => {
-
+    
     describe(`${userType} users`, () => {
-      // eslint-disable-next-line no-unused-vars
+      
       let encodedToken;
       let id;
-
+      
       it('can create one', () => {
         return mockRequest.post('/signup')
-            .send(users[userType])
-            .then(results => {
-              var token = jwt.verify(results.text, process.env.SECRET || 'changeit');
-              id = token.id;
-              encodedToken = results.text;
-              expect(token.id).toBeDefined();
-              expect(token.role).toBeDefined();
-            });
+          .send(users[userType])
+          .then(results => {
+            var token = jwt.verify(results.text, process.env.SECRET);
+            id = token.id;
+            encodedToken = results.text;
+            expect(token.id).toBeDefined();
+          });
       });
 
       it('can signin with basic', () => {
         return mockRequest.post('/signin')
-            .auth(users[userType].username, users[userType].password)
-            .then(results => {
-              var token = jwt.verify(results.text, process.env.SECRET || 'changeit');
-              expect(token.id).toEqual(id);
-              expect(token.role).toBeDefined();
-            });
+          .auth(users[userType].username, users[userType].password)
+          .then(results => {
+            var token = jwt.verify(results.text, process.env.SECRET);
+            expect(token.id).toEqual(id);
+          });
       });
 
     });
-
+    
   });
-
+  
 });
